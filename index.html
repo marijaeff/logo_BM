@@ -12,6 +12,13 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      font-family: sans-serif;
+    }
+
+    .wrapper {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
     }
 
     .container {
@@ -72,8 +79,8 @@
 
     .tooltip {
       position: fixed;
-      background: rgba(255, 255, 255, 0.95);
-      color: #333;
+      background: rgba(37, 3, 3, 0.95);
+      color: #fff;
       padding: 5px 10px;
       border-radius: 8px;
       font-size: 14px;
@@ -85,18 +92,46 @@
       z-index: 99;
     }
 
+    .stats-panel {
+      background: #ffffffcc;
+      backdrop-filter: blur(6px);
+      padding: 16px 24px;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      max-width: 250px;
+      font-family: 'Trebuchet MS', sans-serif;
+      color: #333;
+      font-size: 15px;
+      line-height: 1.5;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stats-panel:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+
+    .stats-panel div {
+      margin: 4px 0;
+      font-size: 16px;
+    }
+
     canvas {
       display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="voteContainer"></div>
+  <div class="wrapper">
+    <div class="container" id="voteContainer"></div>
+    <div class="stats-panel" id="stats">Datu ielāde...</div>
+  </div>
+
   <div id="tooltip" class="tooltip"></div>
   <canvas id="maskCanvas" width="500" height="500"></canvas>
 
   <script>
-    const voteCount = 40;
+    const voteCount = 15;
 
     const palette = [
       { color: '#FF6F91', emotion: 'Skumji' },
@@ -107,12 +142,29 @@
     ];
 
     const container = document.getElementById('voteContainer');
+    const stats = document.getElementById('stats');
     const canvas = document.getElementById('maskCanvas');
     const ctx = canvas.getContext('2d');
     const tooltip = document.getElementById('tooltip');
 
     const img = new Image();
     img.src = 'logo-mask.svg';
+
+    const circles = [];
+
+    function updateStats() {
+      const counts = palette.map(entry => {
+        const votes = circles.filter(c => c.emotion === entry.emotion).length;
+        return { ...entry, votes };
+      });
+
+      const total = counts.reduce((sum, e) => sum + e.votes, 0);
+
+      stats.innerHTML = counts.map(e => {
+        const percent = total ? Math.round((e.votes / total) * 100) : 0;
+        return `<div><span style="color:${e.color}">⬤</span> ${e.emotion} – ${e.votes} (${percent}%)</div>`;
+      }).join('') + `<hr><div><strong>Bērnu skaits:</strong> ${total}</div>`;
+    }
 
     img.onload = () => {
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -143,6 +195,7 @@
           circle.style.top = `${y}px`;
           circle.style.left = `${x}px`;
           circle.style.animationDelay = `${Math.random() * 2}s, ${Math.random() * 8}s`;
+          circle.emotion = selected.emotion;
 
           circle.addEventListener('mouseenter', () => {
             tooltip.textContent = selected.emotion;
@@ -158,9 +211,12 @@
           });
 
           container.appendChild(circle);
+          circles.push(circle);
           added++;
         }
       }
+
+      updateStats();
     };
   </script>
 </body>
