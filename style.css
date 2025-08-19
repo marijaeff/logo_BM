@@ -1,60 +1,190 @@
-body {
+html, body {
   margin: 0;
-  background: #f0f0f0;
+  padding: 0;
+  background: #333;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  font-family: sans-serif;
 }
 
-.logo-container {
-  width: 730px;
-  height: 687px;
+.wrapper {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.container {
+  width: 500px;
+  height: 500px;
   position: relative;
-  background-color: transparent;
   overflow: hidden;
-}
-
-/* применяем маску и к grid */
-#grid {
-  width: 100%;
-  height: 100%;
-  position: relative;
-
-  -webkit-mask-image: url('#turtleMask');
-  mask-image: url('#turtleMask');
-
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-
-  -webkit-mask-size: contain;
+  mask-image: url('logo-mask.svg');
   mask-size: contain;
-
-  -webkit-mask-position: center;
+  mask-repeat: no-repeat;
   mask-position: center;
-
-  background-color: transparent;
+  -webkit-mask-image: url('logo-mask.svg');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  background-color: #FAF3E9;
+  border-radius: 20px;
 }
 
-.circle {
+.circle-wrapper {
   position: absolute;
+  animation: wander 40s infinite ease-in-out;
+  animation-delay: var(--wander-delay);
+  animation-duration: var(--wander-duration);
+}
+
+.circle-wrapper.paused {
+  animation-play-state: paused;
+}
+
+.circle-inner {
+  width: var(--circle-size);
+  height: var(--circle-size);
+  background-color: var(--circle-color);
   border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 1s ease, transform 1s ease;
+  will-change: transform;
+  animation: breathe var(--breathe-duration, 6s) infinite ease-in-out;
+  animation-delay: var(--breathe-delay, 0s);
+}
+
+
+
+.circle-inner.show {
   opacity: 0.6;
-  animation: pulse 2.5s infinite ease-in-out, wander 8s infinite ease-in-out;
+  transform: scale(1);
 }
 
-/* Пульсация */
+.circle-inner.active {
+  animation: pulse 2.5s infinite ease-in-out;
+}
+
+.circle-inner.wander-only {
+  animation: none;
+}
+
+.circle-inner:hover {
+  animation: pulseAndVibrate 1s infinite ease-in-out;
+  opacity: 1;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 0 10px var(--circle-color), 0 0 20px var(--circle-color);
+}
+
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 0.7; }
-  50% { transform: scale(1.2); opacity: 0.5; }
-  100% { transform: scale(1); opacity: 0.7; }
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50%      { transform: scale(1.2); opacity: 0.8; }
 }
 
-/* Блуждание */
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 0.8; }
+}
+
 @keyframes wander {
-  0% { transform: translate(0px, 0px); }
-  25% { transform: translate(10px, -10px); }
-  50% { transform: translate(-10px, 10px); }
-  75% { transform: translate(10px, 10px); }
+  0%   { transform: translate(0px, 0px); }
+  20%  { transform: translate(50px, -40px); }
+  40%  { transform: translate(-60px, 35px); }
+  60%  { transform: translate(45px, 50px); }
+  80%  { transform: translate(-50px, -30px); }
   100% { transform: translate(0px, 0px); }
 }
+
+
+
+@keyframes vibrate {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(2px, -2px); }
+  50% { transform: translate(-2px, 2px); }
+  75% { transform: translate(2px, 2px); }
+  100% { transform: translate(-2px, -2px); }
+}
+
+@keyframes pulseAndVibrate {
+  0%, 100% {
+    transform: scale(1.1) translate(0, 0);
+  }
+  25% {
+    transform: scale(1.1) translate(1px, -1px);
+  }
+  50% {
+    transform: scale(1.2) translate(-1px, 1px);
+  }
+  75% {
+    transform: scale(1.1) translate(1px, 1px);
+  }
+}
+.tooltip {
+  position: fixed;
+  background: rgba(37, 3, 3, 0.95);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -120%);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+  z-index: 99;
+}
+
+.stats-panel {
+  background: #ffffffcc;
+  backdrop-filter: blur(6px);
+  padding: 16px 24px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  max-width: 250px;
+  font-family: 'Trebuchet MS', sans-serif;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.5;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stats-panel:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.stats-panel div {
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+canvas {
+  display: none;
+}
+
+/* #message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  background-color: black;
+  color: rgb(255, 255, 255);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  text-align: center;
+  z-index: 1000;
+}
+
+#message.visible {
+  opacity: 1;
+}
+
+#message.hidden {
+  opacity: 0;
+} */
