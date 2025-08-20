@@ -19,6 +19,31 @@ const circles = [];
 // const heartSound = new Audio('heartbeat.mp3');
 // heartSound.loop = true;
 
+function freezeTransformToPosition(el) {
+  const cs = window.getComputedStyle(el);
+  const tr = cs.transform;
+  if (!tr || tr === 'none') return;
+
+  let tx = 0, ty = 0;
+  if (tr.startsWith('matrix3d')) {
+    const m = tr.slice(9, -1).split(',').map(parseFloat);
+    tx = m[12]; ty = m[13];
+  } else if (tr.startsWith('matrix')) {
+    const m = tr.slice(7, -1).split(',').map(parseFloat);
+    tx = m[4]; ty = m[5];
+  }
+
+  const left = parseFloat(el.style.left) || 0;
+  const top  = parseFloat(el.style.top)  || 0;
+  el.style.left = `${left + tx}px`;
+  el.style.top  = `${top  + ty}px`;
+
+  // Сбросить transform и временно отключить анимацию
+  el.style.transform = 'none';
+  el.style.animation = 'none';
+}
+
+
 function isInsideMask(x, y, size) {
   const points = [
     [x + size / 2, y + size / 2], 
@@ -88,15 +113,18 @@ img.onload = () => {
       container.appendChild(wrapper);
       circle.addEventListener('mousedown', e => {
       draggedWrapper = wrapper;
-      wrapper.style.animation = 'none';
+
+      // ВАЖНО: сперва «заморозить» текущее смещение из transform
+      freezeTransformToPosition(wrapper);
+
       wrapper.style.zIndex = '10';
 
       const containerRect = container.getBoundingClientRect();
       offsetX = e.clientX - containerRect.left - parseFloat(wrapper.style.left);
-      offsetY = e.clientY - containerRect.top - parseFloat(wrapper.style.top);
+      offsetY = e.clientY - containerRect.top  - parseFloat(wrapper.style.top);
 
       e.preventDefault();
-      });
+    });
 
       circles.push(circle);
 
