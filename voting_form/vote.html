@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kā tu jūties šobrīd?</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      background-color: #f5f5f5;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .mood-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .mood-option {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      background-color: white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .mood-option:hover {
+      transform: scale(1.02);
+    }
+
+    .circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .ball1 { background-color: #f97171; }
+    .ball2 { background-color: #f9cb71; }
+    .ball3 { background-color: #a6e071; }
+    .ball4 { background-color: #71b5f9; }
+    .ball5 { background-color: #d371f9; }
+
+    .label {
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kā tu jūties šobrīd?</h1>
+  <div class="mood-container">
+    <div class="mood-option" data-color="#f97171">
+      <div class="circle ball1"></div>
+      <div class="label">Dusmīgs / Satraukts</div>
+    </div>
+    <div class="mood-option" data-color="#f9cb71">
+      <div class="circle ball2"></div>
+      <div class="label">Priecīgs / Enerģisks</div>
+    </div>
+    <div class="mood-option" data-color="#a6e071">
+      <div class="circle ball3"></div>
+      <div class="label">Mierīgs / Līdzsvarots</div>
+    </div>
+    <div class="mood-option" data-color="#71b5f9">
+      <div class="circle ball4"></div>
+      <div class="label">Skumjš / Vientuļš</div>
+    </div>
+    <div class="mood-option" data-color="#d371f9">
+      <div class="circle ball5"></div>
+      <div class="label">Apjucis / Dīvains</div>
+    </div>
+  </div>
+
+  <script>
+    const options = document.querySelectorAll('.mood-option');
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        const color = option.dataset.color;
+        localStorage.setItem('moodColor', color);
+        // TODO: pāriet uz nākamo soli (dzīvnieka izvēle)
+        alert('Tu izvēlējies noskaņojumu!');
+      });
+    });
+  </script>
+</body>
+</html>

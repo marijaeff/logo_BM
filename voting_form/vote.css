@@ -1,0 +1,43 @@
+body {
+  font-family: sans-serif;
+  background: #f4f4f8;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+.colors, .animals {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.color-option, .animal-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid white;
+  transition: transform 0.2s;
+}
+
+.color-option:hover, .animal-icon:hover {
+  transform: scale(1.1);
+}
+
+.animal-icon {
+  border-radius: 10px;
+  object-fit: contain;
+  background: white;
+  padding: 5px;
+}
+
+.hidden {
+  display: none;
+}
