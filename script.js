@@ -38,7 +38,6 @@ function freezeTransformToPosition(el) {
   el.style.left = `${left + tx}px`;
   el.style.top  = `${top  + ty}px`;
 
-  // Сбросить transform и временно отключить анимацию
   el.style.transform = 'none';
   el.style.animation = 'none';
 }
@@ -114,7 +113,6 @@ img.onload = () => {
       circle.addEventListener('mousedown', e => {
       draggedWrapper = wrapper;
 
-      // ВАЖНО: сперва «заморозить» текущее смещение из transform
       freezeTransformToPosition(wrapper);
 
       wrapper.style.zIndex = '10';
@@ -185,10 +183,35 @@ document.addEventListener('mousemove', e => {
     draggedWrapper.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
   }
 });
+document.addEventListener('mouseup', () => {
+  if (!draggedWrapper) return;
 
-  document.addEventListener('mouseup', () => {
-    if (draggedWrapper) {
-      draggedWrapper = null;
-    }
-  });
+  const thisWrapper = draggedWrapper;
+  const circle = thisWrapper.querySelector('.circle-inner');
+
+  thisWrapper.style.zIndex = '1';
+
+  // Держим 15 сек на паузе (wrapper по hover-логике)
+  thisWrapper.classList.add('paused');
+
+  // Пусть кружок мягко пульсирует (если нужно)
+  circle.classList.add('active');
+
+  // НЕ добавляем .calm-down, чтобы он не уменьшался
+  // НЕ трогаем больше никакой wander у circle
+
+  draggedWrapper = null;
+
+  setTimeout(() => {
+    // Снять паузу
+    thisWrapper.classList.remove('paused');
+
+    // Главное: вернуть блуждание wrapper'у, убрав инлайн 'animation: none'
+    thisWrapper.style.animation = ''; // или thisWrapper.style.removeProperty('animation');
+
+    // На всякий случай сбросить прямой transform кружка, если задавался
+    circle.style.transform = '';
+  }, 15000);
+});
+
 };
