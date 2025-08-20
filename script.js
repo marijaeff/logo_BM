@@ -191,27 +191,19 @@ document.addEventListener('mouseup', () => {
 
   thisWrapper.style.zIndex = '1';
 
-  // Держим 15 сек на паузе (wrapper по hover-логике)
   thisWrapper.classList.add('paused');
 
-  // Пусть кружок мягко пульсирует (если нужно)
   circle.classList.add('active');
-
-  // НЕ добавляем .calm-down, чтобы он не уменьшался
-  // НЕ трогаем больше никакой wander у circle
 
   draggedWrapper = null;
 
   setTimeout(() => {
-    // Снять паузу
     thisWrapper.classList.remove('paused');
 
-    // Главное: вернуть блуждание wrapper'у, убрав инлайн 'animation: none'
-    thisWrapper.style.animation = ''; // или thisWrapper.style.removeProperty('animation');
+    thisWrapper.style.animation = ''; 
 
-    // На всякий случай сбросить прямой transform кружка, если задавался
     circle.style.transform = '';
-  }, 15000);
+  }, 20000);
 });
 
 };
