@@ -1,43 +1,120 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
 body {
-  font-family: sans-serif;
-  background: #f4f4f8;
-  padding: 20px;
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f5f1;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.logo-img {
+  width: 60%;
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 16px;
+}
+
+
+.container {
   text-align: center;
 }
 
-.container {
-  max-width: 600px;
-  margin: auto;
+.card {
+  background-color: #f1e8d2;
+  padding: 48px 24px;
+  min-height: 400px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  max-width: 320px;
+  margin: 0 auto;
+
+  display: flex;                 /* делаем флекс-контейнером */
+  flex-direction: column;       /* вертикальное направление */
+  justify-content: center;      /* по вертикали — в центр */
+  align-items: center;          /* по горизонтали — в центр */
+  text-align: center;           /* центрируем сам текст */
+  gap: 16px;                    /* между элементами */
 }
 
-.colors, .animals {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
+.bubble-img {
+  width: 120px;
+  margin-bottom: 16px;
 }
 
-.color-option, .animal-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+.text-top {
+  font-weight: bold;
+  color: #2f4037;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.text-bottom {
+  font-size: 14px;
+  color: #2f4037;
+}
+
+.orange {
+  color: #b06b00;
+  font-weight: bold;
+}
+
+.continue-button {
+  margin-top: 24px;
+  padding: 12px 24px;
+  background-color: #e0a716;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
-  border: 2px solid white;
-  transition: transform 0.2s;
+  transition: background-color 0.3s ease;
 }
 
-.color-option:hover, .animal-icon:hover {
-  transform: scale(1.1);
+.continue-button:hover {
+  background-color: #d29500;
 }
 
-.animal-icon {
-  border-radius: 10px;
-  object-fit: contain;
-  background: white;
-  padding: 5px;
+@media (max-width: 768px) {
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .text-top {
+    font-size: 15px;
+  }
+
+  .text-bottom {
+    font-size: 13px;
+  }
+
+  .continue-button {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 14px;
+  }
 }
 
-.hidden {
-  display: none;
+@media (max-width: 480px) {
+  .text-top {
+    font-size: 14px;
+  }
+
+  .text-bottom {
+    font-size: 12.5px;
+  }
+
+  .continue-button {
+    font-size: 1rem;
+  }
 }
