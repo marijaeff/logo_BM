@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jūtu izvēle</title>
+  <style>
+    @font-face {
+      font-family: 'Montserrat Alternates';
+      src: url('fonts/MontserratAlternates-SemiBold.ttf') format('truetype');
+      font-weight: 600;
+      font-style: normal;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat Alternates', sans-serif;
+      background-color: #f9f5f1;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: clamp(24px, 5vw, 36px);
+      color: #2f4037;
+      margin-bottom: 3rem;
+    }
+
+    .emotion {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s, border 0.2s;
+    }
+
+    .circle.selected {
+      border: 4px solid white;
+      transform: scale(1.1);
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .line {
+      flex-grow: 1;
+      border-top: 4px dashed #2f4037;
+      margin: 0 0.5rem;
+    }
+
+    .label {
+      font-size: 18px;
+      color: #2f4037;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .btn {
+      margin-top: 3rem;
+      padding: 14px 24px;
+      background-color: #e0a716;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #d29500;
+    }
+
+    .btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Цвета кружков */
+    .joy { background-color: #e4ce92; }
+    .sad { background-color: #cfd1e5; }
+    .neutral { background-color: #cfe2cf; }
+    .angry { background-color: #dbbab4; }
+    .tired { background-color: #d5c1d9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pastāsti, kā Tu jūties šeit?</h1>
+
+    <div class="emotion">
+      <div class="circle joy" data-emotion="Ļoti priecīgi"></div>
+      <div class="line"></div>
+      <div class="label">Ļoti priecīgi</div>
+    </div>
+
+    <div class="emotion">
+      <div class="label">Skumji</div>
+      <div class="line"></div>
+      <div class="circle sad" data-emotion="Skumji"></div>
+    </div>
+
+    <div class="emotion">
+      <div class="circle neutral" data-emotion="Neitrāli"></div>
+      <div class="line"></div>
+      <div class="label">Neitrāli</div>
+    </div>
+
+    <div class="emotion">
+      <div class="label">Dusmīgi</div>
+      <div class="line"></div>
+      <div class="circle angry" data-emotion="Dusmīgi"></div>
+    </div>
+
+    <div class="emotion">
+      <div class="circle tired" data-emotion="Noguris"></div>
+      <div class="line"></div>
+      <div class="label">Noguris</div>
+    </div>
+
+    <button class="btn" id="submitBtn" disabled>Izvēlos šo!</button>
+  </div>
+
+  <script>
+    const circles = document.querySelectorAll('.circle');
+    const submitBtn = document.getElementById('submitBtn');
+    let selectedEmotion = null;
+
+    circles.forEach(circle => {
+      circle.addEventListener('click', () => {
+        circles.forEach(c => c.classList.remove('selected'));
+        circle.classList.add('selected');
+        selectedEmotion = circle.getAttribute('data-emotion');
+        submitBtn.disabled = false;
+      });
+    });
+
+    submitBtn.addEventListener('click', () => {
+      if (selectedEmotion) {
+        alert('Tu izvēlējies: ' + selectedEmotion);
+      }
+    });
+  </script>
+</body>
+</html>
