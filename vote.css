@@ -290,3 +290,90 @@ h1 {
   flex: 1;
   min-width: 140px;
 }
+
+.preview-circle {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
+}
+
+.preview-circle img {
+  max-width: 140px;
+  height: auto;
+  transition: filter 0.3s ease;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  justify-items: center;
+  margin: 2rem 0;
+}
+
+.color-option {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
+
+.color-option.selected {
+  border: 3px solid #2f4037;
+}
+
+.animal-shape {
+  width: 140px;
+  height: 140px;
+  background-color: #ffffff; /* дефолтный цвет зверька */
+  /* делаем из PNG маску */
+  -webkit-mask-image: var(--animal-url);
+  mask-image: var(--animal-url);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.custom-color {
+  width: 60px;
+  height: 60px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.color-option.custom-color {
+  position: relative;
+  width: 60px;   /* чтобы совпадало с обычным квадратиком */
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  background: #f0f0f0; /* нейтральный фон */
+}
+
+.color-option.custom-color input[type="color"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;   /* невидимый, но кликабельный */
+  cursor: pointer;
+}
+
+.color-option.custom-color .icon {
+  font-size: 20px;
+  pointer-events: none; /* иконка не мешает клику */
+}
