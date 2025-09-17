@@ -333,10 +333,10 @@ h1 {
 }
 
 .animal-shape {
-  width: 140px;
-  height: 140px;
-  background-color: #ffffff; /* дефолтный цвет зверька */
-  /* делаем из PNG маску */
+  width: 150px;
+  height: 150px;
+  background-color: #ffffff;
+  opacity: 60%;
   -webkit-mask-image: var(--animal-url);
   mask-image: var(--animal-url);
   -webkit-mask-size: contain;
@@ -345,6 +345,13 @@ h1 {
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
+
+  box-shadow: 
+    inset 0 3px 6px rgba(0,0,0,0.35),
+    inset 0 -3px 6px rgba(0,0,0,0.25),
+    inset 0 8px 20px rgba(0,0,0,0.15);
+
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .custom-color {
@@ -368,12 +375,15 @@ h1 {
 
 .color-option.custom-color input[type="color"] {
   position: absolute;
-  inset: 0;
-  opacity: 0;   /* невидимый, но кликабельный */
+  top: 0;
+  left: 0;
+  width: 100%;   /* растянуть на весь квадратик */
+  height: 100%;  /* растянуть на весь квадратик */
+  opacity: 0;    /* невидимый */
   cursor: pointer;
 }
 
 .color-option.custom-color .icon {
   font-size: 20px;
-  pointer-events: none; /* иконка не мешает клику */
+  pointer-events: none; /* чтобы клик шёл на input */
 }

@@ -17,44 +17,19 @@
         </p>
 
 
-<div id="animalPreview" class="preview-circle">
-  <div class="animal-wrap">
-    <div id="animalOutline" class="animal-outline"></div>
-    <div id="animalShape" class="animal-shape"></div>
-  </div>
-</div>
+        <div id="animalPreview" class="preview-circle">
+            <div id="animalShape" class="animal-shape"></div>
+        </div>
+
 
         <div id="animalColors" class="color-grid"></div>
-        
+
 
         <button id="submitBtn" class="btn" disabled>Šī</button>
     </div>
 
     <script src="vote.js" defer></script>
-    <script>
-
-        const emotionColor = sessionStorage.getItem('emotionColor');
-        const animalName = sessionStorage.getItem('animal');
-        const preview = document.getElementById('animalPreview');
-        const img = document.getElementById('animalImage');
-
-        if (emotionColor) {
-            preview.style.backgroundColor = emotionColor;
-        }
-
-        const map = {
-            "Kaķis": "cat.png",
-            "Suns": "dog.png",
-            "Ērglis": "eagle.png",
-            "Lācis": "bear.png",
-            "Čūska": "snake.png",
-            "Lauva": "lion.png"
-        };
-        if (animalName && map[animalName]) {
-            img.src = map[animalName];
-            img.alt = animalName;
-        }
-    </script>
+   
 </body>
 
 </html>
