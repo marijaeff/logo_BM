@@ -108,7 +108,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
   const src = map[animalName] || "cat.png";
   animalShape.style.setProperty('--animal-url', `url("${src}")`);
 
-  // palīdzošas funkcijas 
+  // palīdzošas funkcijas
   function hexToRgb(hex) {
     hex = hex.replace('#', '');
     if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
@@ -147,8 +147,8 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     let fg = hexToRgb(safe);
 
     let tries = 0;
-    while (contrast(fg, bg) < 3 && tries < 10) {  // gribām kontrastu >= 3
-      safe = adjustDarker(safe, 30); // samazina gaišumu uz 30
+    while (contrast(fg, bg) < 3 && tries < 10) {
+      safe = adjustDarker(safe, 30);
       fg = hexToRgb(safe);
       tries++;
     }
@@ -185,7 +185,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     colorContainer.appendChild(div);
   });
 
-  // pats izvēlās krāsu 
+  // pats izvēlās krāsu
   const customDiv = document.createElement("div");
   customDiv.className = "color-option custom-color";
   customDiv.innerHTML = `
@@ -208,6 +208,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
   });
   colorContainer.appendChild(customDiv);
 
+  // tekstūras
   const textures = [
     { name: "Stripes", file: "textures/stripes.svg" },
     { name: "Rails", file: "textures/rails.svg" },
@@ -223,8 +224,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     { name: "Squeres", file: "textures/squares-in-squares.svg" },
     { name: "Houndstooth", file: "textures/houndstooth.svg" },
     { name: "Groovy", file: "textures/groovy.svg" },
-    { name: "DeStar", file: "textures/death-star.svg" },
-    { name: "Bubbles", file: "textures/bubbles.svg" }
+    { name: "DeStar", file: "textures/death-star.svg" }
   ];
 
   const textureContainer = document.getElementById("animalTextures");
@@ -249,19 +249,59 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     });
   }
 
-  // poga
+  // poga Šī -> saglabā + pāriet uz vote_5
   submitBtn4.addEventListener("click", () => {
-    const thanks = document.getElementById("thanksMessage");
-    if (thanks) {
-      thanks.classList.remove("hidden");
-      submitBtn4.classList.add("hidden");
-    }
+    sessionStorage.setItem("finalAnimal", src);
+    sessionStorage.setItem("finalColor", sessionStorage.getItem("animalColor") || "#f2c94c");
+    sessionStorage.setItem("finalTexture", sessionStorage.getItem("animalTexture") || "none");
+
+    window.location.href = "vote_5.html";
   });
 }
 
+// akordeons
 document.querySelectorAll('.accordion-header').forEach(btn => {
   btn.addEventListener('click', () => {
     const content = btn.nextElementSibling;
     content.classList.toggle('open');
   });
 });
+
+// --- vote_5.html (parāda gala rezultātu) ---
+const animalShapeFinal = document.getElementById("animalShapeFinal");
+if (animalShapeFinal) {
+  const finalAnimal = sessionStorage.getItem("finalAnimal") || "cat.png";
+  const finalColor = sessionStorage.getItem("finalColor") || "#f2c94c";
+  const finalTexture = sessionStorage.getItem("finalTexture") || "none";
+
+
+  const previewFinal = document.getElementById("animalPreviewFinal");
+  if (previewFinal) {
+    const emotionColor = sessionStorage.getItem("emotionColor") || "#f1e8d2";
+    previewFinal.style.setProperty("--circle-bg", emotionColor);
+  }
+  // maska dzīvniekam
+  animalShapeFinal.style.setProperty('--animal-url', `url("${finalAnimal}")`);
+
+  // krāsa
+  animalShapeFinal.style.backgroundColor = finalColor;
+
+  // tekstūra
+  if (finalTexture !== "none") {
+    animalShapeFinal.style.backgroundImage = `url(${finalTexture})`;
+    animalShapeFinal.style.backgroundSize = "10px";
+    animalShapeFinal.style.backgroundRepeat = "repeat";
+    animalShapeFinal.style.backgroundBlendMode = "multiply";
+  } else {
+    animalShapeFinal.style.backgroundImage = "none";
+  }
+
+  // pogas
+  document.getElementById("yesBtn").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+  document.getElementById("noBtn").addEventListener("click", () => {
+    window.close();
+    setTimeout(() => { window.location.href = "index.html"; }, 200); // fallback
+  });
+}

@@ -300,6 +300,8 @@ h1 {
   justify-content: center;
   align-items: center;
   margin: 2rem auto;
+  background-color: var(--circle-bg, #f1e8d2); 
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2); 
 }
 
 .preview-circle img {
@@ -334,8 +336,8 @@ h1 {
 }
 
 .animal-shape {
-  width: 180px;
-  height: 180px;
+  width: 220px;
+  height: 220px;
   background-color: #ffffff;
   background-size: 40px; /* или 20px, чтобы текстура стала мелкой */
   opacity: 60%;
