@@ -251,15 +251,15 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
   }
 
   // poga Šī -> saglabā + pāriet uz vote_5
-   submitBtn4.addEventListener("click", () => {
-    if (submitBtn4.disabled) return; 
+  submitBtn4.addEventListener("click", () => {
+    if (submitBtn4.disabled) return;
 
     // sessionStorage для vote_5
     sessionStorage.setItem("finalAnimal", src);
     sessionStorage.setItem("finalColor", sessionStorage.getItem("animalColor") || "#f2c94c");
     sessionStorage.setItem("finalTexture", sessionStorage.getItem("animalTexture") || "none");
 
-    // объект для Firebase
+    // objekts Firebasei
     const vote = {
       animal: src,
       color: sessionStorage.getItem("animalColor") || "#f2c94c",
@@ -269,7 +269,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
       createdAt: Date.now()
     };
 
-    // сохраняем в Firebase
+    // saglabājam Firebaseē
     push(ref(db, "votes"), vote)
       .then(() => window.location.href = "vote_5.html")
       .catch((err) => {

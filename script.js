@@ -1,4 +1,5 @@
-// script.js
+//firebase:)
+
 import { db } from "./firebase.js";
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
@@ -15,7 +16,7 @@ let draggedWrapper = null;
 let offsetX = 0;
 let offsetY = 0;
 
-// проверка попадания в маску
+// vai tika maskā?
 function isInsideMask(x, y, size) {
   const points = [
     [x + size / 2, y + size / 2],
@@ -30,7 +31,28 @@ function isInsideMask(x, y, size) {
   });
 }
 
-// подбираем координаты так, чтобы кружок точно попал внутрь маски
+function freezeTransformToPosition(el) {
+  const tr = getComputedStyle(el).transform;
+  if (tr && tr !== 'none') {
+    let tx = 0, ty = 0;
+    if (tr.startsWith('matrix3d')) {
+      const m = tr.slice(9, -1).split(',').map(parseFloat);
+      tx = m[12]; ty = m[13];
+    } else if (tr.startsWith('matrix')) {
+      const m = tr.slice(7, -1).split(',').map(parseFloat);
+      tx = m[4]; ty = m[5];
+    }
+    const left = parseFloat(el.style.left) || 0;
+    const top = parseFloat(el.style.top) || 0;
+    el.style.left = `${left + tx}px`;
+    el.style.top = `${top + ty}px`;
+  }
+  // убираем текущую трансформацию и CSS-анимацию — будем двигать только left/top
+  el.style.transform = 'none';
+  el.style.animation = 'none';
+}
+
+// koordināti, lai būtu iekš logo
 function placeInsideMask(size) {
   let attempts = 0;
   while (attempts < 1000) {
@@ -39,11 +61,11 @@ function placeInsideMask(size) {
     if (isInsideMask(x, y, size)) return { x, y };
     attempts++;
   }
-  // fallback: если не получилось, рисуем в центре
+  // atkārtiojas
   return { x: canvas.width / 2 - size / 2, y: canvas.height / 2 - size / 2 };
 }
 
-// динамический размер (чем меньше голосов, тем больше пузыри)
+// dinamiskais izmērs
 function getRandomSize(totalVotes) {
   let min, max;
   if (totalVotes < 20) {
@@ -56,20 +78,33 @@ function getRandomSize(totalVotes) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// обновляем статистику
+// statistika
 function updateStats() {
-  const emotions = {};
+  const statsMap = {};
+
   circles.forEach(c => {
-    emotions[c.emotion] = (emotions[c.emotion] || 0) + 1;
+    const emotion = c.emotion;
+    const color = c.style.getPropertyValue('--circle-color') || '#ccc';
+
+    if (!statsMap[emotion]) {
+      statsMap[emotion] = { count: 0, color };
+    }
+    statsMap[emotion].count++;
   });
+
   const total = circles.length;
-  stats.innerHTML = Object.entries(emotions).map(([emotion, votes]) => {
-    const percent = total ? Math.round((votes / total) * 100) : 0;
-    return `<div>${emotion} – ${votes} (${percent}%)</div>`;
+  stats.innerHTML = Object.entries(statsMap).map(([emotion, data]) => {
+    const percent = total ? Math.round((data.count / total) * 100) : 0;
+    return `
+      <div>
+        <span style="color:${data.color}; font-size: 1.5em;">⬤</span>
+        ${emotion} – ${data.count} (${percent}%)
+      </div>
+    `;
   }).join('') + `<hr><div><strong>Bērnu skaits:</strong> ${total}</div>`;
 }
 
-// создаём пузырь из голоса
+// veidojam burbuli no datiem firebase
 function createBubble(vote, totalVotes) {
   const size = getRandomSize(totalVotes);
   const { x, y } = placeInsideMask(size);
@@ -90,41 +125,45 @@ function createBubble(vote, totalVotes) {
   circle.emotion = vote.emotion || "Nezināms";
   circle.animal = vote.animal || "Dzīvnieks";
 
-  // слой-животное с цветом + текстурой
+
+  // dzīvnieks+krāsa+tekstura
   if (vote.animal) {
     const animalEl = document.createElement('div');
     animalEl.className = 'animal-mask';
 
-    // маска по картинке животного
+    // maska
     animalEl.style.webkitMaskImage = `url(${vote.animal})`;
     animalEl.style.maskImage = `url(${vote.animal})`;
 
     const baseColor = vote.color || "#f2c94c";
 
     if (vote.texture && vote.texture !== "none") {
-      // текстура + цвет в одном background
+
       animalEl.style.backgroundImage = `url(${vote.texture}), linear-gradient(${baseColor}, ${baseColor})`;
       animalEl.style.backgroundBlendMode = "multiply";
       animalEl.style.backgroundSize = "20px, cover";
     } else {
-      // только цвет
+
       animalEl.style.backgroundColor = baseColor;
     }
 
     circle.appendChild(animalEl);
+    animalEl.style.pointerEvents = 'none';
+
   }
 
   wrapper.appendChild(circle);
   container.appendChild(wrapper);
   circles.push(circle);
 
-  // анимация появления
+  // parādīšanas animācija
   const appearDelay = Math.random() * 1500;
   setTimeout(() => circle.classList.add('show'), appearDelay);
 
-  // тултип
+
+  // uzbilkšana
   circle.addEventListener('mouseenter', () => {
-    tooltip.textContent = `${circle.animal} (${circle.emotion})`;
+    tooltip.textContent = circle.emotion; // 
     const rect = circle.getBoundingClientRect();
     tooltip.style.left = `${rect.left + rect.width / 2}px`;
     tooltip.style.top = `${rect.top}px`;
@@ -136,20 +175,68 @@ function createBubble(vote, totalVotes) {
     tooltip.style.opacity = '0';
     wrapper.classList.remove('paused');
   });
-
-  // drag&drop
+  circle.addEventListener('mouseleave', () => {
+    tooltip.style.opacity = '0';
+    wrapper.classList.remove('paused');
+  });
+  if (tooltip) tooltip.style.pointerEvents = 'none';
+  // pārvietošanas
   circle.addEventListener('mousedown', e => {
     draggedWrapper = wrapper;
-    wrapper.style.zIndex = '10';
+
+    freezeTransformToPosition(wrapper);
+    wrapper.classList.add('paused');
+
+
     const containerRect = container.getBoundingClientRect();
-    offsetX = e.clientX - containerRect.left - parseFloat(wrapper.style.left);
-    offsetY = e.clientY - containerRect.top - parseFloat(wrapper.style.top);
+    const left = parseFloat(wrapper.style.left) || 0;
+    const top = parseFloat(wrapper.style.top) || 0;
+    offsetX = e.clientX - containerRect.left - left;
+    offsetY = e.clientY - containerRect.top - top;
+
+    wrapper.style.zIndex = '10';
     e.preventDefault();
   });
 }
 
 
-// загружаем маску и подключаем Firebase
+// globālaas???
+document.addEventListener('mousemove', e => {
+  if (draggedWrapper) {
+    const containerRect = container.getBoundingClientRect();
+    const x = e.clientX - containerRect.left - offsetX;
+    const y = e.clientY - containerRect.top - offsetY;
+    const maxX = container.clientWidth - draggedWrapper.offsetWidth;
+    const maxY = container.clientHeight - draggedWrapper.offsetHeight;
+    draggedWrapper.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+    draggedWrapper.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (!draggedWrapper) return;
+
+  const w = draggedWrapper;
+  const c = w.querySelector('.circle-inner');
+  draggedWrapper = null;
+
+  w.style.zIndex = '1';
+  w.style.animationPlayState = 'paused';
+  c.style.animationPlayState = 'paused';
+  w.classList.add('paused');
+
+  if (w._resumeTimer) clearTimeout(w._resumeTimer);
+  w._resumeTimer = setTimeout(() => {
+    w.classList.remove('paused');
+
+    w.style.animation = '';
+    w.style.animationPlayState = 'running';
+    c.style.animationPlayState = 'running';
+    w._resumeTimer = null;
+  }, 5000); //5sek pauze
+});
+
+// pieslēdzam firebase
 img.onload = () => {
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
@@ -167,22 +254,3 @@ img.onload = () => {
     updateStats();
   });
 };
-
-// глобальный drag&drop
-document.addEventListener('mousemove', e => {
-  if (draggedWrapper) {
-    const containerRect = container.getBoundingClientRect();
-    const x = e.clientX - containerRect.left - offsetX;
-    const y = e.clientY - containerRect.top - offsetY;
-    const maxX = container.clientWidth - draggedWrapper.offsetWidth;
-    const maxY = container.clientHeight - draggedWrapper.offsetHeight;
-    draggedWrapper.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
-    draggedWrapper.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
-  }
-});
-document.addEventListener('mouseup', () => {
-  if (!draggedWrapper) return;
-  draggedWrapper.style.zIndex = '1';
-  draggedWrapper.classList.add('paused');
-  draggedWrapper = null;
-});
