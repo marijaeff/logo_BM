@@ -156,7 +156,16 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
   }
 
   // krāsu palitra
-  const colors = ["#D9C2A7", "#A0A7BA", "#A3B18A", "#C49A6C", "#B5A6C9", "#8D827A", "#F2E9E4", "#4B4B4B"];
+  const colors = [
+    "#6BAF92", // zaļš
+    "#E26D5A", // sarkans
+    "#8D6E63", // brūns
+    "#F2C94C", // dzeltens
+    "#9B6DAD", // violets
+    "#7CA982", // olīva
+    "#F2994A", // oranžs
+    "#4A90E2"  // zils
+  ];
   colorContainer.innerHTML = '';
   colors.forEach(c => {
     const div = document.createElement("div");
