@@ -1,17 +1,13 @@
-const moodColors = ["#ff7675", "#74b9ff", "#55efc4", "#ffeaa7", "#a29bfe"];
-const animalList = [
-  { name: "Kaķis", src: "cat.png" },
-  { name: "Suns", src: "dog.png" },
-  { name: "Putns", src: "bird.png" }
-];
-const animalColors = ["#2d3436", "#00cec9", "#fab1a0", "#6c5ce7", "#fdcb6e"];
-
 let selectedMoodColor = null;
 let selectedAnimal = null;
 let selectedAnimalColor = null;
 
+// -------------------- //
+// Утилиты
+// -------------------- //
 function createColorOptions(colors, containerId, onSelect) {
   const container = document.getElementById(containerId);
+  if (!container) return; // защита
   colors.forEach(color => {
     const div = document.createElement("div");
     div.className = "color-option";
@@ -24,6 +20,7 @@ function createColorOptions(colors, containerId, onSelect) {
 
 function createAnimalOptions(animals, containerId, onSelect) {
   const container = document.getElementById(containerId);
+  if (!container) return; // защита
   animals.forEach(animal => {
     const img = document.createElement("img");
     img.src = animal.src;
@@ -35,39 +32,53 @@ function createAnimalOptions(animals, containerId, onSelect) {
   });
 }
 
-createColorOptions(moodColors, "moodColors", (color) => {
-  selectedMoodColor = color;
-  document.getElementById("step2").classList.remove("hidden");
-});
+// -------------------- //
+// vote_2.html (эмоции)
+// -------------------- //
+if (document.querySelector('.circle')) {
+  const circles = document.querySelectorAll('.circle');
+  const submitBtn = document.getElementById('submitBtn');
+  let selectedEmotion = null;
 
-createAnimalOptions(animalList, "animalIcons", (animal) => {
-  selectedAnimal = animal;
-  document.getElementById("step3").classList.remove("hidden");
-});
-
-createColorOptions(animalColors, "animalColors", (color) => {
-  selectedAnimalColor = color;
-  document.getElementById("submitBtn").classList.remove("hidden");
-});
-
-document.getElementById("submitBtn").addEventListener("click", () => {
-  if (selectedMoodColor && selectedAnimal && selectedAnimalColor) {
-    const data = {
-      moodColor: selectedMoodColor,
-      animal: selectedAnimal.name,
-      animalColor: selectedAnimalColor,
-      timestamp: Date.now()
-    };
-    console.log("To send to Firebase:", data);
-    // TODO: replace with firebase logic
-    document.getElementById("submitBtn").classList.add("hidden");
-    document.getElementById("thanksMessage").classList.remove("hidden");
-  }
-});
-
-document.querySelectorAll('.animal').forEach(animal => {
-  animal.addEventListener('click', () => {
-    document.querySelectorAll('.animal').forEach(a => a.classList.remove('selected'));
-    animal.classList.add('selected');
+  circles.forEach(circle => {
+    circle.addEventListener('click', () => {
+      circles.forEach(c => c.classList.remove('selected'));
+      circle.classList.add('selected');
+      selectedEmotion = circle.getAttribute('data-emotion');
+      submitBtn.disabled = false;
+    });
   });
-});
+
+  submitBtn.addEventListener('click', () => {
+    if (selectedEmotion) {
+      sessionStorage.setItem('emotion', selectedEmotion);
+      window.location.href = 'vote_3.html';
+    }
+  });
+}
+
+// -------------------- //
+// vote_3.html (животные)
+// -------------------- //
+if (document.querySelector('.animal-grid')) {
+  const animals = document.querySelectorAll('.animal, .animal-btn');
+  const chooseBtn = document.querySelector('.buttons .btn:first-child');
+
+  animals.forEach(animal => {
+    animal.addEventListener('click', () => {
+      animals.forEach(a => a.classList.remove('selected'));
+      animal.classList.add('selected');
+
+      const img = animal.querySelector('img');
+      selectedAnimal = img ? img.alt : null;
+
+      chooseBtn.disabled = !selectedAnimal;
+    });
+  });
+
+  chooseBtn.addEventListener('click', () => {
+    if (!selectedAnimal) return;
+    sessionStorage.setItem('animal', selectedAnimal);
+    window.location.href = 'vote_4.html';
+  });
+}

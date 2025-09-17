@@ -245,9 +245,10 @@ h1 {
   margin: 2rem 0;
 }
 
-.animal {
-  background: none;        /* без квадрата */
-  border: none;            /* без рамки */
+.animal,
+.animal-btn {
+  background: none;
+  border: none;
   padding: 0;
   cursor: pointer;
   display: flex;
@@ -255,16 +256,19 @@ h1 {
   align-items: center;
 }
 
-.animal img {
-  width: 100px;            /* можно подогнать размер */
+.animal img,
+.animal-btn img {
+  width: 100px;
   height: auto;
-  transition: transform 0.2s, filter 0.2s;
-  border-radius: 50%;      /* если хочешь мягкие края */
+  transition: transform .2s, filter .2s;
+  border-radius: 50%;
 }
 
-.animal.selected img {
-  transform: scale(1.1);
-  filter: drop-shadow(0 0 8px #e0a716);
+.animal.selected img,
+.animal-btn.selected img {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 12px #e0a716) brightness(1.1);
+  border-radius: 50%;
 }
 
 

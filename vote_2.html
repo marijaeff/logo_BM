@@ -43,29 +43,6 @@
     <button class="btn" id="submitBtn" disabled>Izvēlos šo!</button>
   </div>
 
-  <script>
-    const circles = document.querySelectorAll('.circle');
-    const submitBtn = document.getElementById('submitBtn');
-    let selectedEmotion = null;
-
-    circles.forEach(circle => {
-      circle.addEventListener('click', () => {
-        circles.forEach(c => c.classList.remove('selected'));
-        circle.classList.add('selected');
-        selectedEmotion = circle.getAttribute('data-emotion');
-        submitBtn.disabled = false;
-      });
-    });
-
-submitBtn.addEventListener('click', () => {
-  if (selectedEmotion) {
-
-    sessionStorage.setItem('emotion', selectedEmotion);
-
-
-    window.location.href = 'vote_3.html';
-  }
-});
-  </script>
+<script src="vote.js" defer></script>
 </body>
 </html>
