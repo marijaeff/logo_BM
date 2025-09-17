@@ -2,12 +2,10 @@ let selectedMoodColor = null;
 let selectedAnimal = null;
 let selectedAnimalColor = null;
 
-// -------------------- //
-// Утилиты
-// -------------------- //
+
 function createColorOptions(colors, containerId, onSelect) {
   const container = document.getElementById(containerId);
-  if (!container) return; // защита
+  if (!container) return; // aidzsarzība
   colors.forEach(color => {
     const div = document.createElement("div");
     div.className = "color-option";
@@ -20,7 +18,7 @@ function createColorOptions(colors, containerId, onSelect) {
 
 function createAnimalOptions(animals, containerId, onSelect) {
   const container = document.getElementById(containerId);
-  if (!container) return; // защита
+  if (!container) return; // aizsardzība
   animals.forEach(animal => {
     const img = document.createElement("img");
     img.src = animal.src;
@@ -32,10 +30,10 @@ function createAnimalOptions(animals, containerId, onSelect) {
   });
 }
 
-// -------------------- //
-// vote_2.html (эмоции)
-// -------------------- //
+
 // vote_2.html
+
+
 if (document.querySelector('.circle')) {
   const circles = document.querySelectorAll('.circle');
   const submitBtn = document.getElementById('submitBtn');
@@ -54,7 +52,7 @@ if (document.querySelector('.circle')) {
     if (!selectedEmotion) return;
     sessionStorage.setItem('emotion', selectedEmotion);
 
-    // Сохраняем цвет фона настроения (RGB-строка — норм)
+    // saglabājam krāsu noskaņai
     const sel = document.querySelector('.circle.selected');
     const moodColor = sel ? getComputedStyle(sel).backgroundColor : '';
     if (moodColor) sessionStorage.setItem('emotionColor', moodColor);
@@ -64,9 +62,9 @@ if (document.querySelector('.circle')) {
 }
 
 
-// -------------------- //
-// vote_3.html (животные)
-// -------------------- //
+
+// vote_3.html 
+
 if (document.querySelector('.animal-grid')) {
   const animals = document.querySelectorAll('.animal, .animal-btn');
   const chooseBtn = document.querySelector('.buttons .btn:first-child');
@@ -90,18 +88,18 @@ if (document.querySelector('.animal-grid')) {
   });
 }
 
-// --- vote_4.html (выбор цвета животного) ---
+//  vote_4 
 const colorContainer = document.getElementById("animalColors");
 const previewCircle = document.getElementById("animalPreview");
 const animalShape = document.getElementById("animalShape");
 const submitBtn4 = document.getElementById("submitBtn");
 
 if (colorContainer && previewCircle && animalShape && submitBtn4) {
-  // 1) фон круга = цвет настроения
+  // aplis - izvēlētais garastāvoklis
   const emotionColor = sessionStorage.getItem('emotionColor') || '#cfe2cf';
   previewCircle.style.backgroundColor = emotionColor;
 
-  // 2) задаём маску зверька
+  // maska dzīvniekam
   const animalName = sessionStorage.getItem('animal');
   const map = {
     "Kaķis": "cat.png", "Suns": "dog.png", "Ērglis": "eagle.png",
@@ -110,7 +108,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
   const src = map[animalName] || "cat.png";
   animalShape.style.setProperty('--animal-url', `url("${src}")`);
 
-  // ===== вспомогательные функции =====
+  // palīdzošas funkcijas 
   function hexToRgb(hex) {
     hex = hex.replace('#', '');
     if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
@@ -149,16 +147,16 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     let fg = hexToRgb(safe);
 
     let tries = 0;
-    while (contrast(fg, bg) < 3 && tries < 10) {  // целимся в контраст >= 3
-      safe = adjustDarker(safe, 30); // уменьшаем яркость на 30
+    while (contrast(fg, bg) < 3 && tries < 10) {  // gribām kontrastu >= 3
+      safe = adjustDarker(safe, 30); // samazina gaišumu uz 30
       fg = hexToRgb(safe);
       tries++;
     }
     return safe;
   }
 
-  // ===== палитра стандартных цветов =====
-  const colors = ["#6c5ce7", "#d63031", "#00cec9", "#fab1a0", "#fdcb6e", "#636e72", "#2d3436", "#ffffff", "#000000"];
+  // krāsu palitra
+  const colors = ["#D9C2A7", "#A0A7BA", "#A3B18A", "#C49A6C", "#B5A6C9", "#8D827A", "#F2E9E4", "#4B4B4B"];
   colorContainer.innerHTML = '';
   colors.forEach(c => {
     const div = document.createElement("div");
@@ -178,7 +176,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     colorContainer.appendChild(div);
   });
 
-  // ===== кастомный выбор цвета =====
+  // pats izvēlās krāsu 
   const customDiv = document.createElement("div");
   customDiv.className = "color-option custom-color";
   customDiv.innerHTML = `
@@ -214,7 +212,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     { name: "Signal", file: "textures/signal.svg" },
     { name: "Stars", file: "textures/slanted-stars.svg" },
     { name: "Squeres", file: "textures/squares-in-squares.svg" },
-    { name: "Houndstooth", file: "textures/houndstooth.svg"},
+    { name: "Houndstooth", file: "textures/houndstooth.svg" },
     { name: "Groovy", file: "textures/groovy.svg" },
     { name: "DeStar", file: "textures/death-star.svg" },
     { name: "Bubbles", file: "textures/bubbles.svg" }
@@ -242,7 +240,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     });
   }
 
-  // ===== кнопка "Šī" =====
+  // poga
   submitBtn4.addEventListener("click", () => {
     const thanks = document.getElementById("thanksMessage");
     if (thanks) {

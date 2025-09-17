@@ -32,9 +32,8 @@ body {
   max-width: 420px;
 }
 
-/* -------------------- */
-/* vote.html карточка */
-/* -------------------- */
+
+/* vote.html */
 
 .logo-img {
   width: 100%;
@@ -93,9 +92,9 @@ body {
   background-color: #d29500;
 }
 
-/* -------------------- */
-/* vote_2.html эмоции */
-/* -------------------- */
+
+/* vote_2.html */
+
 
 h1 {
   font-size: clamp(24px, 5vw, 36px);
@@ -163,16 +162,16 @@ h1 {
   box-shadow: none;
 }
 
-/* Цвета эмоций */
+/* emociju krāsas */
 .joy     { background-color: #e4ce92; }
 .sad     { background-color: #cfd1e5; }
 .neutral { background-color: #cfe2cf; }
 .angry   { background-color: #dbbab4; }
 .tired   { background-color: #d5c1d9; }
 
-/* -------------------- */
-/* Адаптив */
-/* -------------------- */
+
+/* adaptācija telefonam */
+
 @media (min-width: 768px) {
   .card {
     max-width: 700px;
@@ -236,6 +235,8 @@ h1 {
   }
 }
 
+/* vote_3 */
+
 .animal-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -288,6 +289,8 @@ h1 {
   flex: 1;
   min-width: 140px;
 }
+
+/* vote_4 */
 
 .preview-circle {
   width: 220px;
@@ -363,28 +366,28 @@ h1 {
 
 .color-option.custom-color {
   position: relative;
-  width: 60px;   /* чтобы совпадало с обычным квадратиком */
+  width: 60px;  
   height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 12px;
-  background: #f0f0f0; /* нейтральный фон */
+  background: #f0f0f0; 
 }
 
 .color-option.custom-color input[type="color"] {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;   /* растянуть на весь квадратик */
-  height: 100%;  /* растянуть на весь квадратик */
-  opacity: 0;    /* невидимый */
+  width: 100%;
+  height: 100%;  
+  opacity: 0; 
   cursor: pointer;
 }
 
 .color-option.custom-color .icon {
   font-size: 20px;
-  pointer-events: none; /* чтобы клик шёл на input */
+  pointer-events: none; 
 }
 
 .texture-container {
@@ -426,13 +429,13 @@ h1 {
   border: none;
 }
 
-/* Заголовок аккордеона — как кнопки */
+/* akkordiaona stils */
 .accordion-header {
   width: 100%;
-  text-align: left;
+  text-align: middle;
   padding: 0.8rem 1rem;
-  background: #e0a716;       /* оранжевый, как кнопки */
-  color: #fff;               /* белый текст */
+  background: #e0a716;    
+  color: #fff;      
   border: none;
   font-size: 16px;
   font-family: 'Montserrat Alternates', Arial, sans-serif;
@@ -442,22 +445,21 @@ h1 {
 }
 
 .accordion-header:hover {
-  background: #c89514; /* чуть темнее при наведении */
+  background: #c89514; 
 }
 
-/* Контент внутри аккордеона */
 .accordion-content {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
   background: #fff;
-  padding: 0; /* закрыт — без отступов */
+  padding: 0; 
 }
 
-/* При открытии */
+
 .accordion-content.open {
-  max-height: 200px;   /* фиксированная высота */
-  overflow-y: auto;    /* скролл, если элементов больше */
+  max-height: 200px;  
+  overflow-y: auto;  
   padding: 0.8rem 1rem;
   border: 1px solid #ddd;
 }
