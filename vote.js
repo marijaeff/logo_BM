@@ -213,7 +213,7 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     { name: "Jigsaw", file: "textures/jigsaw.svg" },
     { name: "Signal", file: "textures/signal.svg" },
     { name: "Stars", file: "textures/slanted-stars.svg" },
-    { name: "Squeres", file: "textures/squeres-in-squeres.svg" },
+    { name: "Squeres", file: "textures/squares-in-squares.svg" },
     { name: "Houndstooth", file: "textures/houndstooth.svg"},
     { name: "Groovy", file: "textures/groovy.svg" },
     { name: "DeStar", file: "textures/death-star.svg" },
