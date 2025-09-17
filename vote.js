@@ -1,3 +1,6 @@
+import { db } from "./firebase.js";
+import { ref, push } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
 let selectedMoodColor = null;
 let selectedAnimal = null;
 let selectedAnimalColor = null;
@@ -95,11 +98,9 @@ const animalShape = document.getElementById("animalShape");
 const submitBtn4 = document.getElementById("submitBtn");
 
 if (colorContainer && previewCircle && animalShape && submitBtn4) {
-  // aplis - izvēlētais garastāvoklis
   const emotionColor = sessionStorage.getItem('emotionColor') || '#cfe2cf';
   previewCircle.style.backgroundColor = emotionColor;
 
-  // maska dzīvniekam
   const animalName = sessionStorage.getItem('animal');
   const map = {
     "Kaķis": "cat.png", "Suns": "dog.png", "Ērglis": "eagle.png",
@@ -250,12 +251,31 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
   }
 
   // poga Šī -> saglabā + pāriet uz vote_5
-  submitBtn4.addEventListener("click", () => {
+   submitBtn4.addEventListener("click", () => {
+    if (submitBtn4.disabled) return; 
+
+    // sessionStorage для vote_5
     sessionStorage.setItem("finalAnimal", src);
     sessionStorage.setItem("finalColor", sessionStorage.getItem("animalColor") || "#f2c94c");
     sessionStorage.setItem("finalTexture", sessionStorage.getItem("animalTexture") || "none");
 
-    window.location.href = "vote_5.html";
+    // объект для Firebase
+    const vote = {
+      animal: src,
+      color: sessionStorage.getItem("animalColor") || "#f2c94c",
+      texture: sessionStorage.getItem("animalTexture") || "none",
+      emotion: sessionStorage.getItem("emotion"),
+      emotionColor: sessionStorage.getItem("emotionColor"),
+      createdAt: Date.now()
+    };
+
+    // сохраняем в Firebase
+    push(ref(db, "votes"), vote)
+      .then(() => window.location.href = "vote_5.html")
+      .catch((err) => {
+        console.error("Kļūda saglabājot balsojumu:", err);
+        window.location.href = "vote_5.html"; // fallback
+      });
   });
 }
 
