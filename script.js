@@ -11,6 +11,7 @@ const tooltip = document.getElementById('tooltip');
 const img = new Image();
 img.src = 'logo-mask.svg';
 const circles = [];
+let activePointerId = null;
 
 let draggedWrapper = null;
 let offsetX = 0;

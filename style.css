@@ -57,10 +57,12 @@ body {
   position: relative;
   overflow: hidden;
   opacity: 0;
+  touch-action: none; 
 }
 
 /* ikona dzīvniekam */
 .circle-inner .animal-mask {
+  pointer-events: none;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -119,6 +121,8 @@ body {
   transition: transform 2s ease, box-shadow 2s ease;
   transform: scale(0.5);
 }
+
+#voteContainer { user-select: none; -webkit-user-select: none; }
 
 @keyframes pulse {
 
