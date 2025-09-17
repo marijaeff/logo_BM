@@ -251,3 +251,10 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
     }
   });
 }
+
+document.querySelectorAll('.accordion-header').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const content = btn.nextElementSibling;
+    content.classList.toggle('open');
+  });
+});

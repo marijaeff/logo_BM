@@ -1,6 +1,4 @@
-/* -------------------- */
-/* ШРИФТЫ И БАЗОВЫЕ СТИЛИ */
-/* -------------------- */
+
 @font-face {
   font-family: 'Montserrat Alternates';
   src: url('fonts/MontserratAlternates-SemiBold.ttf') format('truetype');
@@ -419,4 +417,47 @@ h1 {
   background-repeat: repeat;
   opacity: 0.7;             
   pointer-events: none;     
+}
+
+.accordion {
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: none;
+}
+
+/* Заголовок аккордеона — как кнопки */
+.accordion-header {
+  width: 100%;
+  text-align: left;
+  padding: 0.8rem 1rem;
+  background: #e0a716;       /* оранжевый, как кнопки */
+  color: #fff;               /* белый текст */
+  border: none;
+  font-size: 16px;
+  font-family: 'Montserrat Alternates', Arial, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.accordion-header:hover {
+  background: #c89514; /* чуть темнее при наведении */
+}
+
+/* Контент внутри аккордеона */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #fff;
+  padding: 0; /* закрыт — без отступов */
+}
+
+/* При открытии */
+.accordion-content.open {
+  max-height: 200px;   /* фиксированная высота */
+  overflow-y: auto;    /* скролл, если элементов больше */
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
 }
