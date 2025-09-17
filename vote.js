@@ -64,3 +64,10 @@ document.getElementById("submitBtn").addEventListener("click", () => {
     document.getElementById("thanksMessage").classList.remove("hidden");
   }
 });
+
+document.querySelectorAll('.animal').forEach(animal => {
+  animal.addEventListener('click', () => {
+    document.querySelectorAll('.animal').forEach(a => a.classList.remove('selected'));
+    animal.classList.add('selected');
+  });
+});
