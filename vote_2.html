@@ -57,11 +57,15 @@
       });
     });
 
-    submitBtn.addEventListener('click', () => {
-      if (selectedEmotion) {
-        alert('Tu izvēlējies: ' + selectedEmotion);
-      }
-    });
+submitBtn.addEventListener('click', () => {
+  if (selectedEmotion) {
+
+    sessionStorage.setItem('emotion', selectedEmotion);
+
+
+    window.location.href = 'vote_3.html';
+  }
+});
   </script>
 </body>
 </html>
