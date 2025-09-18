@@ -287,7 +287,7 @@ document.querySelectorAll('.accordion-header').forEach(btn => {
   });
 });
 
-// --- vote_5.html (parāda gala rezultātu) ---
+// vote_5.html 
 const animalShapeFinal = document.getElementById("animalShapeFinal");
 if (animalShapeFinal) {
   const finalAnimal = sessionStorage.getItem("finalAnimal") || "cat.png";

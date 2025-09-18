@@ -48,7 +48,7 @@ function freezeTransformToPosition(el) {
     el.style.left = `${left + tx}px`;
     el.style.top = `${top + ty}px`;
   }
-  // убираем текущую трансформацию и CSS-анимацию — будем двигать только left/top
+  
   el.style.transform = 'none';
   el.style.animation = 'none';
 }
