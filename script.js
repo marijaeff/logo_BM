@@ -19,6 +19,13 @@ let draggedWrapper = null;
 let offsetX = 0;
 let offsetY = 0;
 
+function biasedRandom(min, max) {
+  // Dodam lielāku varbūtību vidum
+  const r = Math.random();
+  const biased = (r + Math.random()) / 2; // vidējojam
+  return min + biased * (max - min);
+}
+
 // vai tika maskā?
 function isInsideMask(x, y, size) {
   const points = [
@@ -58,14 +65,22 @@ function freezeTransformToPosition(el) {
 // koordināti, lai būtu iekš logo
 function placeInsideMask(size) {
   let attempts = 0;
+
   while (attempts < 1000) {
-    const x = Math.random() * (canvas.width - size);
-    const y = Math.random() * (canvas.height - size);
-    if (isInsideMask(x, y, size)) return { x, y };
+    const x = biasedRandom(0, canvas.width - size);
+    const y = biasedRandom(0, canvas.height - size);
+
+    if (isInsideMask(x, y, size)) {
+      return { x, y };
+    }
     attempts++;
   }
-  // atkārtiojas
-  return { x: canvas.width / 2 - size / 2, y: canvas.height / 2 - size / 2 };
+
+  // Ja neizdodas — drošs centrs
+  return {
+    x: canvas.width / 2 - size / 2,
+    y: canvas.height / 2 - size / 2
+  };
 }
 
 // dinamiskais izmērs
