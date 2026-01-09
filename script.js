@@ -9,6 +9,7 @@ const canvas = document.getElementById('maskCanvas');
 const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('tooltip');
 const img = new Image();
+const isTouchDevice = window.matchMedia('(hover: none)').matches;
 img.src = 'logo-mask.svg';
 const circles = [];
 let activePointerId = null;
@@ -48,7 +49,7 @@ function freezeTransformToPosition(el) {
     el.style.left = `${left + tx}px`;
     el.style.top = `${top + ty}px`;
   }
-  
+
   el.style.transform = 'none';
   el.style.animation = 'none';
 }
@@ -198,8 +199,50 @@ function createBubble(vote, totalVotes) {
     wrapper.style.zIndex = '10';
     e.preventDefault();
   });
+
+  circle.addEventListener('click', (e) => {
+    // Uz datora klikšķis neko nefiksē — darbojas tikai hover
+    if (!isTouchDevice) return;
+
+    e.stopPropagation();
+
+    const wasActive = circle.classList.contains('active');
+
+    // Noņemam active no visiem burbuļiem
+    document.querySelectorAll('.circle-inner.active').forEach(c => {
+      c.classList.remove('active');
+      c.closest('.circle-wrapper')?.classList.remove('paused');
+    });
+
+    // Ja šis burbulis iepriekš nebija aktīvs — aktivizējam
+    if (!wasActive) {
+      // 🔥 Piespiežam pārzīmēšanu, lai animācija uz mobile sāktos no jauna
+      circle.classList.remove('active');
+      void circle.offsetWidth; // pārrēķina layout (reflow)
+      circle.classList.add('active');
+
+      // Apstādinām klejošanas animāciju
+      wrapper.classList.add('paused');
+    }
+  });
+
 }
 
+function deactivateAllCircles() {
+  document.querySelectorAll('.circle-inner.active').forEach(c => {
+    const wrapper = c.closest('.circle-wrapper');
+
+    // Uzreiz sākam vizuālo atslēgšanos (bez pauzes)
+    c.classList.remove('active');
+    c.classList.add('calm-down');
+
+    // Pēc nelielas kustības pauzes atjaunojam klejošanu
+    setTimeout(() => {
+      c.classList.remove('calm-down');
+      wrapper?.classList.remove('paused');
+    }, 600); // tikai kustībai, ne gaismai
+  });
+}
 
 // globālaas???
 document.addEventListener('mousemove', e => {
@@ -255,3 +298,7 @@ img.onload = () => {
     updateStats();
   });
 };
+
+document.addEventListener('click', () => {
+  deactivateAllCircles();
+});
