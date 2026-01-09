@@ -133,8 +133,8 @@ function getRandomSize(totalVotes) {
     min = 20; max = 50;
   }
 
-  // Samazinām izmēru uz mobilajām ierīcēm
-  const mobileScale = isMobile ? 0.7 : 1;
+  // 📱 Uz mobilajām ierīcēm samazinām izmēru
+  const mobileScale = isMobile ? 0.55 : 1;
 
   min *= mobileScale;
   max *= mobileScale;
