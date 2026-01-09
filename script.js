@@ -299,9 +299,30 @@ document.addEventListener('mouseup', () => {
   }, 5000); //5sek pauze
 });
 
+function resizeCanvasToContainer() {
+  const rect = container.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+
+  // Fiziskais canvas izmērs
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+
+  // CSS izmērs
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+
+  // Mērogojam kontekstu uz CSS koordinātēm
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
 // pieslēdzam firebase
 img.onload = () => {
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  resizeCanvasToContainer();
+
+  const rect = container.getBoundingClientRect();
+
+  ctx.clearRect(0, 0, rect.width, rect.height);
+  ctx.drawImage(img, 0, 0, rect.width, rect.height);
 
   const votesRef = ref(db, "votes");
   onValue(votesRef, (snapshot) => {
@@ -317,4 +338,7 @@ img.onload = () => {
     updateStats();
   });
 };
+
+
+
 
