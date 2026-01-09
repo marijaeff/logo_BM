@@ -12,8 +12,10 @@ const img = new Image();
 const isTouchDevice = window.matchMedia('(hover: none)').matches;
 const isMobile = window.matchMedia('(max-width: 768px)').matches;
 img.src = 'logo-mask.svg';
+const placedCircles = [];
 const circles = [];
 let activePointerId = null;
+let isDragging = false;
 
 let draggedWrapper = null;
 let offsetX = 0;
@@ -49,6 +51,22 @@ function isInsideMask(x, y, size) {
   });
 }
 
+function hasEnoughSpace(x, y, size) {
+  const cx = x + size / 2;
+  const cy = y + size / 2;
+  const r = size / 2;
+
+  return placedCircles.every(p => {
+    const dx = cx - p.cx;
+    const dy = cy - p.cy;
+    const dist = Math.hypot(dx, dy);
+
+    const minDist = (r + p.r) * 0.75;
+    return dist >= minDist;
+  });
+}
+
+
 function freezeTransformToPosition(el) {
   const tr = getComputedStyle(el).transform;
   if (tr && tr !== 'none') {
@@ -77,22 +95,30 @@ function placeInsideMask(size) {
   const maxX = container.clientWidth - size;
   const maxY = container.clientHeight - size;
 
-  while (attempts < 1000) {
+  while (attempts < 1500) {
     const x = biasedRandom(0, maxX);
     const y = biasedRandom(0, maxY);
 
-    if (isInsideMask(x, y, size)) {
+    if (isInsideMask(x, y, size) && hasEnoughSpace(x, y, size)) {
+      placedCircles.push({
+        cx: x + size / 2,
+        cy: y + size / 2,
+        r: size / 2
+      });
+
       return { x, y };
     }
+
     attempts++;
   }
 
-  // Drošs centrs CSS koordinātēs
+  // ✅ fallback — ВСЁ ЕЩЁ ВНУТРИ ФУНКЦИИ
   return {
     x: container.clientWidth / 2 - size / 2,
     y: container.clientHeight / 2 - size / 2
   };
 }
+
 
 
 // dinamiskais izmērs
@@ -332,24 +358,40 @@ img.onload = () => {
   resizeCanvasToContainer();
 
   const rect = container.getBoundingClientRect();
-
   ctx.clearRect(0, 0, rect.width, rect.height);
   ctx.drawImage(img, 0, 0, rect.width, rect.height);
+};
 
-  const votesRef = ref(db, "votes");
-  onValue(votesRef, (snapshot) => {
+
+const votesRef = ref(db, "votes");
+
+onValue(
+  votesRef,
+  (snapshot) => {
     const data = snapshot.val();
+
     container.innerHTML = "";
     circles.length = 0;
+    placedCircles.length = 0;
 
     if (data) {
       const votes = Object.values(data);
       const totalVotes = votes.length;
       votes.forEach(vote => createBubble(vote, totalVotes));
+    } else {
+      // Nav datu / tukšs mezgls
+      stats.innerHTML = `<div>Nav datu "votes"</div>`;
     }
+
     updateStats();
-  });
-};
+  },
+  (error) => {
+    // Firebase kļūda (tiesības / tīkls / utt.)
+    stats.innerHTML = `<div style="color:#b00020"><strong>Firebase kļūda:</strong> ${error.message}</div>`;
+  }
+);
+
+
 
 
 
