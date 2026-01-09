@@ -200,25 +200,22 @@ function createBubble(vote, totalVotes) {
     e.preventDefault();
   });
 
-circle.addEventListener('pointerdown', (e) => {
-  // Tikai uz touch ierīcēm
-  if (!isTouchDevice) return;
+  circle.addEventListener('pointerdown', (e) => {
+    if (!isTouchDevice) return;
 
-  e.stopPropagation();
+    e.stopPropagation();
+    isDragging = false;
 
-  // Atzīmējam, ka tas vēl nav drag
-  isDragging = false;
+    deactivateAllCircles(circle);
 
-  // Deaktivizējam CITUS burbuļus, ne šo
-  deactivateAllCircles(circle);
+    circle.style.setProperty('--breathe-delay', '0s');
 
-  // Uzreiz aktivizējam šo burbuli
-  circle.classList.remove('active');
-  void circle.offsetWidth; // piespiež pārzīmēšanu
-  circle.classList.add('active');
+    circle.classList.remove('active');
+    void circle.offsetWidth;
+    circle.classList.add('active');
 
-  wrapper.classList.add('paused');
-});
+    wrapper.classList.add('paused');
+  });
 
 }
 
@@ -294,6 +291,9 @@ img.onload = () => {
   });
 };
 
-document.addEventListener('click', () => {
-  deactivateAllCircles();
+container.addEventListener('pointerdown', (e) => {
+  // Ja pieskāriens nav uz burbuļa — deaktivizējam
+  if (!e.target.closest('.circle-inner')) {
+    deactivateAllCircles();
+  }
 });
