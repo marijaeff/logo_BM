@@ -28,6 +28,8 @@ function biasedRandom(min, max) {
 
 // vai tika maskā?
 function isInsideMask(x, y, size) {
+  const dpr = window.devicePixelRatio || 1;
+
   const points = [
     [x + size / 2, y + size / 2],
     [x + 5, y + 5],
@@ -35,8 +37,14 @@ function isInsideMask(x, y, size) {
     [x + 5, y + size - 5],
     [x + size - 5, y + size - 5]
   ];
+
   return points.every(([px, py]) => {
-    const pixel = ctx.getImageData(px, py, 1, 1).data;
+    const pixel = ctx.getImageData(
+      Math.floor(px * dpr),
+      Math.floor(py * dpr),
+      1,
+      1
+    ).data;
     return pixel[3] > 10;
   });
 }
@@ -66,9 +74,12 @@ function freezeTransformToPosition(el) {
 function placeInsideMask(size) {
   let attempts = 0;
 
+  const maxX = container.clientWidth - size;
+  const maxY = container.clientHeight - size;
+
   while (attempts < 1000) {
-    const x = biasedRandom(0, canvas.width - size);
-    const y = biasedRandom(0, canvas.height - size);
+    const x = biasedRandom(0, maxX);
+    const y = biasedRandom(0, maxY);
 
     if (isInsideMask(x, y, size)) {
       return { x, y };
@@ -76,12 +87,13 @@ function placeInsideMask(size) {
     attempts++;
   }
 
-  // Ja neizdodas — drošs centrs
+  // Drošs centrs CSS koordinātēs
   return {
-    x: canvas.width / 2 - size / 2,
-    y: canvas.height / 2 - size / 2
+    x: container.clientWidth / 2 - size / 2,
+    y: container.clientHeight / 2 - size / 2
   };
 }
+
 
 // dinamiskais izmērs
 function getRandomSize(totalVotes) {
@@ -224,25 +236,25 @@ function createBubble(vote, totalVotes) {
     e.preventDefault();
   });
 
-circle.addEventListener('pointerdown', (e) => {
-  // Tikai uz touch ierīcēm
-  if (!isTouchDevice) return;
+  circle.addEventListener('pointerdown', (e) => {
+    // Tikai uz touch ierīcēm
+    if (!isTouchDevice) return;
 
-  e.stopPropagation();
+    e.stopPropagation();
 
-  // Atzīmējam, ka tas vēl nav drag
-  isDragging = false;
+    // Atzīmējam, ka tas vēl nav drag
+    isDragging = false;
 
-  // Deaktivizējam CITUS burbuļus, ne šo
-  deactivateAllCircles(circle);
+    // Deaktivizējam CITUS burbuļus, ne šo
+    deactivateAllCircles(circle);
 
-  // Uzreiz aktivizējam šo burbuli
-  circle.classList.remove('active');
-  void circle.offsetWidth; // piespiež pārzīmēšanu
-  circle.classList.add('active');
+    // Uzreiz aktivizējam šo burbuli
+    circle.classList.remove('active');
+    void circle.offsetWidth; // piespiež pārzīmēšanu
+    circle.classList.add('active');
 
-  wrapper.classList.add('paused');
-});
+    wrapper.classList.add('paused');
+  });
 
 }
 
