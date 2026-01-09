@@ -200,47 +200,42 @@ function createBubble(vote, totalVotes) {
     e.preventDefault();
   });
 
-  circle.addEventListener('click', (e) => {
-    // Uz datora klikšķis neko nefiksē — darbojas tikai hover
-    if (!isTouchDevice) return;
+circle.addEventListener('pointerdown', (e) => {
+  // Tikai uz touch ierīcēm
+  if (!isTouchDevice) return;
 
-    e.stopPropagation();
+  e.stopPropagation();
 
-    const wasActive = circle.classList.contains('active');
+  // Atzīmējam, ka tas vēl nav drag
+  isDragging = false;
 
-    // Noņemam active no visiem burbuļiem
-    document.querySelectorAll('.circle-inner.active').forEach(c => {
-      c.classList.remove('active');
-      c.closest('.circle-wrapper')?.classList.remove('paused');
-    });
+  // Deaktivizējam CITUS burbuļus, ne šo
+  deactivateAllCircles(circle);
 
-    // Ja šis burbulis iepriekš nebija aktīvs — aktivizējam
-    if (!wasActive) {
-      // 🔥 Piespiežam pārzīmēšanu, lai animācija uz mobile sāktos no jauna
-      circle.classList.remove('active');
-      void circle.offsetWidth; // pārrēķina layout (reflow)
-      circle.classList.add('active');
+  // Uzreiz aktivizējam šo burbuli
+  circle.classList.remove('active');
+  void circle.offsetWidth; // piespiež pārzīmēšanu
+  circle.classList.add('active');
 
-      // Apstādinām klejošanas animāciju
-      wrapper.classList.add('paused');
-    }
-  });
+  wrapper.classList.add('paused');
+});
 
 }
 
-function deactivateAllCircles() {
+function deactivateAllCircles(exceptCircle = null) {
   document.querySelectorAll('.circle-inner.active').forEach(c => {
+    if (c === exceptCircle) return;
+
     const wrapper = c.closest('.circle-wrapper');
 
-    // Uzreiz sākam vizuālo atslēgšanos (bez pauzes)
-    c.classList.remove('active');
+    // Sākam nomierināšanu
     c.classList.add('calm-down');
 
-    // Pēc nelielas kustības pauzes atjaunojam klejošanu
     setTimeout(() => {
+      c.classList.remove('active');
       c.classList.remove('calm-down');
       wrapper?.classList.remove('paused');
-    }, 600); // tikai kustībai, ne gaismai
+    }, 600);
   });
 }
 
