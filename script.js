@@ -10,6 +10,7 @@ const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('tooltip');
 const img = new Image();
 const isTouchDevice = window.matchMedia('(hover: none)').matches;
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
 img.src = 'logo-mask.svg';
 const circles = [];
 let activePointerId = null;
@@ -70,6 +71,7 @@ function placeInsideMask(size) {
 // dinamiskais izmērs
 function getRandomSize(totalVotes) {
   let min, max;
+
   if (totalVotes < 20) {
     min = 50; max = 100;
   } else if (totalVotes < 50) {
@@ -77,6 +79,13 @@ function getRandomSize(totalVotes) {
   } else {
     min = 20; max = 50;
   }
+
+  // Samazinām izmēru uz mobilajām ierīcēm
+  const mobileScale = isMobile ? 0.7 : 1;
+
+  min *= mobileScale;
+  max *= mobileScale;
+
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -200,22 +209,25 @@ function createBubble(vote, totalVotes) {
     e.preventDefault();
   });
 
-  circle.addEventListener('pointerdown', (e) => {
-    if (!isTouchDevice) return;
+circle.addEventListener('pointerdown', (e) => {
+  // Tikai uz touch ierīcēm
+  if (!isTouchDevice) return;
 
-    e.stopPropagation();
-    isDragging = false;
+  e.stopPropagation();
 
-    deactivateAllCircles(circle);
+  // Atzīmējam, ka tas vēl nav drag
+  isDragging = false;
 
-    circle.style.setProperty('--breathe-delay', '0s');
+  // Deaktivizējam CITUS burbuļus, ne šo
+  deactivateAllCircles(circle);
 
-    circle.classList.remove('active');
-    void circle.offsetWidth;
-    circle.classList.add('active');
+  // Uzreiz aktivizējam šo burbuli
+  circle.classList.remove('active');
+  void circle.offsetWidth; // piespiež pārzīmēšanu
+  circle.classList.add('active');
 
-    wrapper.classList.add('paused');
-  });
+  wrapper.classList.add('paused');
+});
 
 }
 
@@ -291,9 +303,3 @@ img.onload = () => {
   });
 };
 
-container.addEventListener('pointerdown', (e) => {
-  // Ja pieskāriens nav uz burbuļa — deaktivizējam
-  if (!e.target.closest('.circle-inner')) {
-    deactivateAllCircles();
-  }
-});
