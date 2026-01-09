@@ -2,7 +2,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #333;
+  background: #14332E;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,8 +17,8 @@ body {
 }
 
 .container {
-  width: 500px;
-  height: 500px;
+  width: 650px;
+  height: 650px;
   position: relative;
   overflow: hidden;
   mask-image: url('logo-mask.svg');
