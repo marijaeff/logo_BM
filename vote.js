@@ -283,9 +283,23 @@ if (colorContainer && previewCircle && animalShape && submitBtn4) {
 document.querySelectorAll('.accordion-header').forEach(btn => {
   btn.addEventListener('click', () => {
     const content = btn.nextElementSibling;
-    content.classList.toggle('open');
+    const isOpen = content.classList.contains('open');
+
+    if (isOpen) {
+      // закрываем плавно
+      content.style.maxHeight = content.scrollHeight + 'px';
+      requestAnimationFrame(() => {
+        content.style.maxHeight = '0px';
+      });
+      content.classList.remove('open');
+    } else {
+      // открываем плавно
+      content.classList.add('open');
+      content.style.maxHeight = content.scrollHeight + 'px';
+    }
   });
 });
+
 
 // vote_5.html 
 const animalShapeFinal = document.getElementById("animalShapeFinal");
