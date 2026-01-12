@@ -112,7 +112,7 @@ function placeInsideMask(size) {
     attempts++;
   }
 
-  // ✅ fallback — ВСЁ ЕЩЁ ВНУТРИ ФУНКЦИИ
+  // neizdevās atrast vietu, novietojam centrā
   return {
     x: container.clientWidth / 2 - size / 2,
     y: container.clientHeight / 2 - size / 2
@@ -128,12 +128,12 @@ function getRandomSize(totalVotes) {
   if (totalVotes < 20) {
     min = 50; max = 100;
   } else if (totalVotes < 50) {
-    min = 35; max = 80;
+    min = 40; max = 75;
   } else {
-    min = 20; max = 50;
+    min = 30; max = 60;
   }
 
-  // 📱 Uz mobilajām ierīcēm samazinām izmēru
+  // uz mobilajām ierīcēm samazinām izmēru
   const mobileScale = isMobile ? 0.55 : 1;
 
   min *= mobileScale;

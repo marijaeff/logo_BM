@@ -291,11 +291,7 @@ h1 {
 
 /* ------------------ TABLET ------------------ */
 
-@media (max-width: 767px) {
-  .animal-shape::after {
-    display: none;
-  }
-}
+
 
 @media (min-width: 768px) {
   .container {
@@ -382,6 +378,17 @@ h1 {
     inset 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
+/* texture overlay */
+.animal-shape::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--animal-texture, none);
+  background-size: 20px;
+  background-repeat: repeat;
+  opacity: 0.7;
+  pointer-events: none;
+}
 
 /* ------------------ ACCORDION ------------------ */
 
