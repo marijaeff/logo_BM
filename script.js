@@ -128,9 +128,9 @@ function getRandomSize(totalVotes) {
   if (totalVotes < 20) {
     min = 50; max = 100;
   } else if (totalVotes < 50) {
-    min = 40; max = 75;
+    min = 40; max = 85;
   } else {
-    min = 30; max = 60;
+    min = 30; max = 75;
   }
 
   // uz mobilajām ierīcēm samazinām izmēru
